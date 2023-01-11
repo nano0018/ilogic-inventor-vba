@@ -1,0 +1,27 @@
+﻿Dim oSSet As SelectSet = ThisDoc.Document.SelectSet
+If oSSet.count = 0 Then
+	MessageBox.Show("You must select a drawing view first", "iLogic")
+Exit Sub
+End If
+
+Dim oView As DrawingView = trycast(oSSet.item(1), DrawingView)
+'MessageBox.Show(oView.Label.FormattedText , "iLogic")
+iProperties.Value("Summary", "Comments") = oView.Label.FormattedText
+
+arrSplitStrings1 = Split(oView.Label.FormattedText, " ")
+Dim spltdString As String
+
+
+For Each spltdString In arrSplitStrings1
+	Dim SearchChar As String = "FormatID" 
+	strPos = InStr(spltdString, SearchChar)
+	If strPos = 1 Then
+		strV1 = spltdString
+	End If
+Next
+MessageBox.Show(strV1, "Title")
+MessageBox.Show(oView.Label.FormattedText, "Title")
+
+
+
+

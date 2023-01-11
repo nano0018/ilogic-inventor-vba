@@ -1,0 +1,18 @@
+﻿oDoc = ThisDoc.Document
+
+
+For Each oSketch In oDoc.ComponentDefinition.Sketches
+oSketch.Visible = wfBoolean
+Next
+For Each oWorkPlane In oDoc.ComponentDefinition.WorkPlanes
+oWorkPlane.Visible = wfBoolean
+Next
+For Each oWorkAxis In oDoc.ComponentDefinition.WorkAxes
+oWorkAxis.Visible = wfBoolean
+Next
+For Each oSketches3D In oDoc.ComponentDefinition.Sketches3D
+oSketches3D.Visible = wfBoolean
+Next
+For Each oWorkPoint In oDoc.ComponentDefinition.WorkPoints
+oWorkPoint.Visible = wfBoolean
+Next

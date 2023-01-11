@@ -1,0 +1,22 @@
+﻿Dim repMgr As RepresentationsManager = ThisApplication.ActiveDocument.ComponentDefinition.RepresentationsManager
+ 
+Dim oCurrentRepName As String  = repMgr.ActiveLevelOfDetailRepresentation.Name
+ 
+Dim oRep As LevelOfDetailRepresentation
+Dim oRepName 
+Dim oMass
+Dim oMassR
+ 
+For Each oRep In repMgr.LevelOfDetailRepresentations
+    oRepName = oRep.Name
+    'activate this LOD
+    repMgr.LevelOfDetailRepresentations.Item(oRepName).Activate
+    'get mass
+     oMass = iProperties.Mass+0.5
+	 oMassR=Math.Round(oMass, 0)
+     'update value of custom property
+     iProperties.Value("Custom", oRepName) = oMassR 
+Next
+ 
+
+repMgr.LevelOfDetailRepresentations.Item(oCurrentRepName).Activate

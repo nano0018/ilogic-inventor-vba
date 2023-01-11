@@ -1,0 +1,36 @@
+﻿Sub Main()
+Dim oDoc As Document = ThisApplication.ActiveDocument
+Dim oSheet As Sheet
+Dim oBalloon As Balloon
+Dim oDim As DrawingDimension
+Dim oCL As Centerline
+Dim oCM As Centermark
+
+For Each oSheet In oDoc.Sheets
+	oSheet.Activate
+	For Each oBalloon In oSheet.Balloons
+		If oBalloon.Attached = False
+			oBalloon.Delete
+		End If 'Baloon attached
+	Next 'Balloon
+
+	For Each oDim in oSheet.DrawingDimensions
+		If oDim.Attached = False
+			oDim.Delete
+		End If 'Dim attached
+	Next 'Dim
+
+	For Each oCL In oSheet.Centerlines
+		If oCL.Attached = False
+			oCL.Delete
+		End If 'Centerline attached
+	Next 'Centerline
+
+	For Each oCM In oSheet.Centermarks
+		If oCM.Attached = False
+			oCM.Delete
+		End If 'Centermark attached
+	Next 'Centermark	
+Next 'Sheet
+
+End Sub

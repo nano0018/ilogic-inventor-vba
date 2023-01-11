@@ -1,0 +1,47 @@
+﻿Sub Main
+	ThisApplication.ActiveDocument.UnitsOfMeasure.LengthUnits = UnitsTypeEnum.kMillimeterLengthUnits
+	Dim tipoPaso As String
+	Dim cantidadCadenas As String
+	Dim pasoCadena As String
+	Dim nDientes As String
+	Dim especificacionCadena As String
+	
+	pasoCadena = Parameter("da_p")
+	cantidadCadenas = Parameter("da_k")
+	nDientes = Parameter("da_z")
+	
+	'Selección de tipo de cadena
+	
+	If Parameter("da_p") = 6.350 Then	
+		tipoPaso = "25"
+	ElseIf Parameter("da_p") = 9.525 Then
+		tipoPaso = "35"
+	ElseIf Parameter("da_p") = 12.7 Then
+		tipoPaso = "40"
+	ElseIf Parameter("da_p") = 15.875 Then
+		tipoPaso = "50"
+	ElseIf Parameter("da_p") = 19.05 Then
+		tipoPaso = "60"
+	ElseIf Parameter("da_p") = 25.4 Then
+		tipoPaso = "80"
+	ElseIf Parameter("da_p") = 31.75 Then
+		tipoPaso = "100"
+	ElseIf Parameter("da_p") = 38.1 Then
+		tipoPaso = "120"
+	ElseIf Parameter("da_p") = 44.45 Then
+		tipoPaso = "140"
+	ElseIf Parameter("da_p") = 50.8 Then
+		tipoPaso = "160"
+	ElseIf Parameter("da_p") = 57.15 Then
+		tipoPaso = "180"
+	ElseIf Parameter("da_p") = 63.5 Then
+		tipoPaso = "200"
+	ElseIf Parameter("da_p") = 76.2 Then
+		tipoPaso = "240"	
+	End If
+	
+	especificacionCadena = tipoPaso + "-" + cantidadCadenas
+	
+	iProperties.Value("Project", "Description")="Piñón " + especificacionCadena + "; Z= " + nDientes
+
+End Sub

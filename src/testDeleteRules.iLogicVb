@@ -1,0 +1,7 @@
+﻿Dim oADoc As AssemblyDocument = ThisApplication.ActiveDocument
+Dim oAuto As IiLogicAutomation = iLogicVb.Automation
+Dim oRuleName As String = "Run_form"
+
+For Each oRefDoc As Document In oADoc.AllReferencedDocuments
+	oAuto.DeleteRule(oRefDoc, oRuleName)
+Next

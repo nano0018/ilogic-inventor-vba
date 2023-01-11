@@ -1,0 +1,6 @@
+﻿ Dim oDoc As Inventor.Document
+ Dim ref As Inventor.ReferencedOLEFileDescriptor
+ oDoc = ThisApplication.ActiveDocument
+ For Each ref In oDoc.ReferencedOLEFileDescriptors
+    ref.Delete 'delete reference
+ Next

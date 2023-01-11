@@ -1,0 +1,49 @@
+﻿'Dim oDoc As AssemblyDocument
+Dim oDoc As PartDocument = ThisDoc.Document 'of : oDoc as AssemblyDocumment = ThisDoc.Document
+
+Try
+prop = oDoc.ComponentDefinition.Parameters.UserParameters.item ("LARGO")
+Catch
+newprop = oDoc.ComponentDefinition.Parameters.UserParameters.AddByExpression("LARGO", "0", "mm")
+End Try
+
+param =Parameter.Param("LARGO") 
+param.ExposedAsProperty = True 
+param.CustomPropertyFormat.ShowTrailingZeros = False 
+param.CustomPropertyFormat.ShowLeadingZeros = False 
+param.CustomPropertyFormat.ShowUnitsString = False 
+param.CustomPropertyFormat.Units = "mm"
+
+Try
+prop = oDoc.ComponentDefinition.Parameters.UserParameters.item ("ANCHO")
+Catch
+newprop = oDoc.ComponentDefinition.Parameters.UserParameters.AddByExpression("ANCHO", "0", "mm")
+End Try
+
+param1 =Parameter.Param("ANCHO") 
+param1.ExposedAsProperty = True 
+param1.CustomPropertyFormat.ShowTrailingZeros = False 
+param1.CustomPropertyFormat.ShowLeadingZeros = False 
+param1.CustomPropertyFormat.ShowUnitsString = False
+param1.CustomPropertyFormat.Units = "mm"
+
+
+Parameter("LARGO")=SheetMetal.FlatExtentsLength
+Parameter("ANCHO")=SheetMetal.FlatExtentsWidth
+
+
+Dim oPartDoc As PartDocument
+ oPartDoc=ThisApplication.ActiveDocument
+ Dim oParameter As Parameter
+ Dim oFormat As CustomPropertyFormat 
+ For Each oParameter In oPartDoc.ComponentDefinition.Parameters.UserParameters 
+ oFormat=oParameter.CustomPropertyFormat 
+ oParameter.ExposedAsProperty=True
+
+ oFormat.PropertyType=Inventor.CustomPropertyTypeEnum.kTextPropertyType
+ oFormat.Precision=Inventor.CustomPropertyPrecisionEnum.kZeroDecimalPlacePrecision
+ oFormat.Units="mm"
+ oFormat.ShowUnitsString=True
+ oFormat.ShowLeadingZeros=True
+ oFormat.ShowTrailingZeros=False
+Next oParameter

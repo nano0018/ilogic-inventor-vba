@@ -1,0 +1,13 @@
+﻿
+
+Dim oDoc As DrawingDocument
+oDoc = ThisApplication.ActiveDocument
+Dim oSheet As Sheet
+oSheet = oDoc.ActiveSheet
+Dim oDrawingDim As DrawingDimension
+
+For Each oDrawingDim In oSheet.DrawingDimensions
+If oDrawingDim.Attached = False Then
+Call oDrawingDim.Delete
+End If
+Next

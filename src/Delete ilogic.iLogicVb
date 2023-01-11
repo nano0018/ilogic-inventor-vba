@@ -1,0 +1,260 @@
+﻿Sub Main
+Auto = iLogicVb.Automation
+Dim iLogicAuto As Object
+iLogicAuto = Auto 
+Call deletecurrent()
+Dim oDoc As Document
+oDoc = ThisApplication.ActiveDocument
+Dim oCompDef As Inventor.ComponentDefinition = oDoc.ComponentDefinition
+Dim occ As ComponentOccurrence
+
+For Each occ In oCompDef.Occurrences
+isum=isum+1
+Next
+
+For i=1 To isum
+occ = oDoc.ComponentDefinition.Occurrences(i)
+If occ.Name="" Then Goto 1:
+occDocument= occ.Definition.Document
+asm = ThisApplication.Documents.Open(occ.Definition.Document.fullfilename,False)
+Call RemoveRulesfromEventTrigger(occ)
+asm.Close(True)
+
+If occDocument.DocumentType = Inventor.DocumentTypeEnum.kPartDocumentObject Then 
+    If occ.Definition.IsiPartMember Then
+    factoryDoc = occ.Definition.iPartMember.ReferencedDocumentDescriptor.ReferencedDocument.FullFileName
+    asm = ThisApplication.Documents.Open(factoryDoc,False)
+    
+    Call RemoveRulesfromEventTriggerIpart(occ)
+    
+    asm.Close(True)
+    End If
+End If
+
+
+If occDocument.DocumentType = Inventor.DocumentTypeEnum.kAssemblyDocumentObject Then
+    If occ.Definition.IsiAssemblyMember Then
+    factoryDoc = occ.Definition.iAssemblyMember.ReferencedDocumentDescriptor.ReferencedDocument.FullFileName
+    asm = ThisApplication.Documents.Open(factoryDoc,False)
+    
+    Call RemoveRulesfromEventTriggerIAssembly(occ)
+    
+    asm.Close(True)
+    End If
+Call ProcessFactoryFile(occ)
+End If
+1:
+Next
+
+End Sub
+
+
+
+Sub ProcessFactoryFile ( occ As ComponentOccurrence)
+
+oDoc = occ.Definition.Document
+Dim oCompDef As Inventor.ComponentDefinition = oDoc.ComponentDefinition
+Dim Subocc As ComponentOccurrence
+
+isum=0
+
+
+For Each Subocc In oCompDef.Occurrences
+isum=isum+1
+Next
+
+For i=1 To isum
+
+subocc = oDoc.ComponentDefinition.Occurrences(i)
+suboccDocument= subocc.Definition.Document
+
+If subocc.Name="" Then Goto 1:
+
+asm = ThisApplication.Documents.Open(subocc.Definition.Document.fullfilename,False)
+Call RemoveRulesfromEventTrigger(subocc)
+asm.Close(True)
+If suboccDocument.DocumentType = Inventor.DocumentTypeEnum.kPartDocumentObject Then 
+    If subocc.Definition.IsiPartMember Then
+    factoryDoc = subocc.Definition.iPartMember.ReferencedDocumentDescriptor.ReferencedDocument.FullFileName
+    asm = ThisApplication.Documents.Open(factoryDoc,False)
+    
+    Call RemoveRulesfromEventTriggerIpart(subocc)
+    
+    asm.Close(True)
+    End If
+End If
+
+If suboccDocument.DocumentType = Inventor.DocumentTypeEnum.kAssemblyDocumentObject Then
+If subocc.Definition.IsiAssemblyMember Then
+    factoryDoc = subocc.Definition.iAssemblyMember.ReferencedDocumentDescriptor.ReferencedDocument.FullFileName
+    asm = ThisApplication.Documents.Open(factoryDoc,False)
+    
+    Call RemoveRulesfromEventTriggerIAssembly(subocc)
+    
+    asm.Close(True)
+    End If
+Call ProcessFactoryFile(subocc)
+End If
+1:
+Next
+End Sub
+
+Sub RemoveRulesfromEventTrigger(occ As ComponentOccurrence)
+
+    'On Error Resume Next    
+  
+
+    Auto = iLogicVb.Automation
+    Dim iLogicAuto As Object
+    iLogicAuto = Auto 
+    Dim oiLogicDoc As Document 
+    
+
+    'capture current document
+    oiLogicDoc = occ.Definition.Document
+    'load up ilogic automation
+    Dim oiLogicAuto As Object = iLogicVb.Automation
+    'get container for all of the ilogic rules
+    Dim oRules As Object = oiLogicAuto.rules(oiLogicDoc)
+    'variable for the events rules
+    Dim oiLogicPropSet As PropertySet
+    'set up a counter
+    Dim iPropCount As Integer
+    
+
+   Try
+    'set our property set since we know it exists now
+    oiLogicPropSet = oiLogicDoc.PropertySets.Item("{2C540830-0723-455E-A8E2-891722EB4C3E}")
+    'oiLogicPropSet = oiLogicDoc.PropertySets.Item("iLogicEventsRules")
+        
+    Dim strDeletedTriggers As String
+    'iterate through the triggers And delete Each
+    
+    If Not oiLogicPropSet.Count=0 Then
+   For i As Integer = oiLogicPropSet.Count To 0 Step -1
+        oiLogicPropSet.Item(i).Delete
+    Next i
+    End If
+    Catch
+    
+    End Try
+
+
+End Sub
+
+Sub RemoveRulesfromEventTriggerIpart(occ As ComponentOccurrence)
+
+    'On Error Resume Next    
+  
+    factorydoc=occ.Definition.iPartMember.Parentfactory
+    Auto = iLogicVb.Automation
+    Dim iLogicAuto As Object
+    iLogicAuto = Auto 
+    Dim oiLogicDoc As Document 
+    
+
+    'capture current document
+    oiLogicDoc =occ.Definition.iPartMember.ReferencedDocumentDescriptor.ReferencedDocument
+    'load up ilogic automation
+    Dim oiLogicAuto As Object = iLogicVb.Automation
+    'get container for all of the ilogic rules
+    Dim oRules As Object = oiLogicAuto.rules(oiLogicDoc)
+    'variable for the events rules
+    Dim oiLogicPropSet As PropertySet
+    'set up a counter
+    Dim iPropCount As Integer
+    
+
+   Try
+    'set our property set since we know it exists now
+    oiLogicPropSet = oiLogicDoc.PropertySets.Item("{2C540830-0723-455E-A8E2-891722EB4C3E}")
+    'oiLogicPropSet = oiLogicDoc.PropertySets.Item("iLogicEventsRules")
+        
+    Dim strDeletedTriggers As String
+    'iterate through the triggers And delete Each
+    
+    If Not oiLogicPropSet.Count=0 Then
+   For i As Integer = oiLogicPropSet.Count To 0 Step -1
+        oiLogicPropSet.Item(i).Delete
+    Next i
+    End If
+    Catch
+    
+    End Try
+
+
+End Sub
+
+Sub RemoveRulesfromEventTriggerIAssembly(occ As ComponentOccurrence)
+
+    'On Error Resume Next    
+  
+    factorydoc=occ.Definition.iAssemblyMember.Parentfactory
+    Auto = iLogicVb.Automation
+    Dim iLogicAuto As Object
+    iLogicAuto = Auto 
+    Dim oiLogicDoc As Document 
+    
+
+    'capture current document
+    oiLogicDoc =occ.Definition.iAssemblyMember.ReferencedDocumentDescriptor.ReferencedDocument
+    'load up ilogic automation
+    Dim oiLogicAuto As Object = iLogicVb.Automation
+    'get container for all of the ilogic rules
+    Dim oRules As Object = oiLogicAuto.rules(oiLogicDoc)
+    'variable for the events rules
+    Dim oiLogicPropSet As PropertySet
+    'set up a counter
+    Dim iPropCount As Integer
+    
+
+   Try
+    'set our property set since we know it exists now
+    oiLogicPropSet = oiLogicDoc.PropertySets.Item("{2C540830-0723-455E-A8E2-891722EB4C3E}")
+    'oiLogicPropSet = oiLogicDoc.PropertySets.Item("iLogicEventsRules")
+        
+    Dim strDeletedTriggers As String
+    'iterate through the triggers And delete Each
+    
+    If Not oiLogicPropSet.Count=0 Then
+   For i As Integer = oiLogicPropSet.Count To 0 Step -1
+        oiLogicPropSet.Item(i).Delete
+    Next i
+    End If
+    Catch
+    
+    End Try
+
+
+End Sub
+
+Sub deletecurrent()
+
+ On Error Resume Next    
+    
+    Auto = iLogicVb.Automation
+    Dim iLogicAuto As Object
+    iLogicAuto = Auto 
+    Dim oiLogicDoc As Document 
+    
+    'capture current document
+    oiLogicDoc = ThisApplication.ActiveDocument
+    'load up ilogic automation
+    Dim oiLogicAuto As Object = iLogicVb.Automation
+    'get container for all of the ilogic rules
+    Dim oRules As Object = oiLogicAuto.rules(oiLogicDoc)
+    'variable for the events rules
+    Dim oiLogicPropSet As PropertySet
+    'set up a counter
+    Dim iPropCount As Integer
+    
+    'set our property set since we know it exists now
+    oiLogicPropSet = oiLogicDoc.PropertySets.Item("{2C540830-0723-455E-A8E2-891722EB4C3E}")
+    'oiLogicPropSet = oiLogicDoc.PropertySets.Item("iLogicEventsRules")
+        
+    Dim strDeletedTriggers As String
+    'iterate through the triggers And delete Each
+    For i As Integer = oiLogicPropSet.Count To 0 Step -1
+        oiLogicPropSet.Item(i).Delete
+    Next i
+End Sub

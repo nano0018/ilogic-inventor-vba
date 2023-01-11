@@ -1,0 +1,5 @@
+﻿oDoc = ThisDoc.Document
+
+For Each oSketches3D In oDoc.ComponentDefinition.Sketches3D
+oSketches3D.Delete
+Next

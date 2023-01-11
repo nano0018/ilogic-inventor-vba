@@ -1,0 +1,38 @@
+﻿'Dim oDoc As AssemblyDocument
+Dim oDoc As PartDocument = ThisDoc.Document 'of : oDoc as AssemblyDocumment = ThisDoc.Document
+
+Try
+prop = oDoc.ComponentDefinition.Parameters.UserParameters.item ("SL")
+Catch
+newprop = oDoc.ComponentDefinition.Parameters.UserParameters.AddByExpression("SL", "0", "mm")
+End Try
+
+param =Parameter.Param("SL") 
+param.ExposedAsProperty = True 
+param.CustomPropertyFormat.ShowTrailingZeros = False 
+param.CustomPropertyFormat.ShowLeadingZeros = False 
+param.CustomPropertyFormat.ShowUnitsString = False 
+param.CustomPropertyFormat.Units = "mm"
+
+Try
+prop = oDoc.ComponentDefinition.Parameters.UserParameters.item ("SW")
+Catch
+newprop = oDoc.ComponentDefinition.Parameters.UserParameters.AddByExpression("SW", "0", "mm")
+End Try
+
+
+param1 =Parameter.Param("SW") 
+param1.ExposedAsProperty = True 
+param1.CustomPropertyFormat.ShowTrailingZeros = False 
+param1.CustomPropertyFormat.ShowLeadingZeros = False 
+param1.CustomPropertyFormat.ShowUnitsString = False
+param.CustomPropertyFormat.Units = "mm"
+
+
+Parameter("SL")=SheetMetal.FlatExtentsLength
+Parameter("SW")=SheetMetal.FlatExtentsWidth
+
+
+
+iProperties.Value("Project", "Description")="=Lámina HR <SL>mm x <SW>mm x <Thickness>'' "
+'iProperties.Value("Project", "Part Number")="=<description>" No va. Solo descripción'

@@ -1,0 +1,16 @@
+﻿Dim oAsm As AssemblyDocument = ThisDoc.Document
+Dim oDef As AssemblyComponentDefinition = oAsm.ComponentDefinition
+Dim oBOM As BOM = oDef.BOM
+oBOM.StructuredViewEnabled = True
+oBOM.PartsOnlyViewEnabled = False
+Dim oBOMView As BOMView = oBOM.BOMViews(2) 'Structured View
+For Each oRow As BOMRow In oBOMView.BOMRows
+	For Each rDef As ComponentDefinition In oRow.ComponentDefinitions
+		If TypeOf (rDef) Is VirtualComponentDefinition Then Continue For
+		Try
+			rDef.Document.PropertySets("Inventor User Defined Properties")("ItemNumber").Value = oRow.ItemNumber.ToString()
+		Catch
+			rDef.Document.PropertySets("Inventor User Defined Properties").Add(oRow.ItemNumber.ToString, "ItemNumber")
+		End Try
+	Next
+Next

@@ -1,0 +1,45 @@
+﻿' start ilogic code
+
+
+' checks to see if iproperty EtchNumber exists. If not create it and assign a value
+
+
+Sub Main
+'check to see if active document is a part
+If ThisApplication.ActiveDocumentType <> 12290 Then
+MessageBox.Show ("You need to have a part(ipt) active" & vbCrLf & "to run this rule", "ilogic", _
+MessageBoxButtons.Ok,MessageBoxIcon.Exclamation)
+Exit Sub
+End If
+
+Dim TempEtchNumber As String = iProperties.Value("Project","Part Number")
+
+' check part number
+
+If Len(TempEtchNumber) <> 15 Then
+MessageBox.Show("Add part number to the part number iproperty " & vbCrfl & "run rule again", "ilogic", _
+MessageBoxButtons.Ok,MessageBoxIcon.Exclamation)
+
+Exit Sub
+End If
+
+TempEtchNumber = TempEtchNumber.Replace("-","")
+TempEtchNumber = TempEtchNumber.substring(4)
+
+
+Dim PropertyName1 As String = "EtchNumber"
+oCustomPropertySet = ThisApplication.ActiveDocument.PropertySets.Item ("Inventor User Defined Properties")
+
+'look for custom iproperty and try to use it
+Try
+oProp = oCustomPropertySet.Item (PropertyName1)
+Catch
+oCustomPropertySet.Add(" ",PropertyName1)
+End Try
+iProperties.Value("Custom", "EtchNumber") = TempEtchNumber
+
+End Sub
+
+ 
+
+' finish ilogic code

@@ -1,0 +1,6 @@
+﻿Dim oComp As ComponentOccurrence
+Dim oComps As ComponentOccurrences
+oComps = ThisDoc.Document.ComponentDefinition.Occurrences
+For Each oComp In oComps
+If Component.IsActive(oComp.Name) = False Then oComp.Delete
+Next

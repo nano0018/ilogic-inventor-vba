@@ -1,0 +1,9 @@
+﻿
+Dim oAsmCompDef As AssemblyComponentDefinition
+oAsmCompDef = ThisApplication.ActiveDocument.ComponentDefinition
+Dim ref As ComponentOccurrence
+For Each ref In oAsmCompDef.Occurrences
+If ref.ReferencedDocumentDescriptor.ReferenceMissing = True Then
+ref.Delete
+End If
+Next

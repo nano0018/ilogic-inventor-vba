@@ -1,0 +1,12 @@
+﻿Dim NewDoc As AssemblyDocument
+Dim newDocName As String = ThisDoc.Path & "\MyNewAssemblyName.iam"
+
+ThisDoc.Document.SaveAs(newDocName, True)
+ThisDoc.Launch(newDocName)
+NewDoc = ThisApplication.Documents.ItemByName(newDocName)
+
+'find the component in the newDoc and replace it
+Dim partToReplace As ComponentOccurrence = NewDoc.ComponentDefinition.Occurrences.ItemByName("PartDisplayNameHere:1") 'use the parts display name
+partToReplace.Replace(ThisDoc.Path & "\YourReplacementPartNameHere.ipt", False) 'use the file name (you'll probably use a variable from your excel function) 'Change to true to "replace all"
+
+NewDoc.Save

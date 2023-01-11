@@ -1,0 +1,19 @@
+﻿Dim oSSet As SelectSet = ThisDoc.Document.SelectSet
+If oSSet.count = 0 Then
+	MessageBox.Show("You must select a drawing view first", "iLogic")
+Exit Sub
+End If
+
+'Reference to the drawing view from the 1st selected object
+Dim oView As DrawingView = trycast(oSSet.item(1), DrawingView)
+
+If oView IsNot Nothing Then
+oView.ShowLabel = True
+'format the model iproperties	
+oPartNumber = "<StyleOverride FontSize='0,25'>Pieza </StyleOverride><StyleOverride FontSize='0,25'><Property Document='model' PropertySet='User Defined Properties' Property='ItemNumber' FormatID='{D5CDD505-2E9C-101B-9397-08002B2CF9AE}'>ItemNumber</Property></StyleOverride><Br/><StyleOverride FontSize='0,25'>Cantidad </StyleOverride><StyleOverride FontSize='0,25'><Property Document='model' PropertySet='User Defined Properties' Property='ItemQuantity' FormatID='{D5CDD505-2E9C-101B-9397-08002B2CF9AE}'>ItemQuantity</Property></StyleOverride><Br/><StyleOverride FontSize='0,25'>( </StyleOverride><StyleOverride FontSize='0,25'><DrawingViewScale/></StyleOverride><StyleOverride FontSize='0,25'>)</StyleOverride><Br/><StyleOverride FontSize='0,25'><Property Document='model' PropertySet='Design Tracking Properties' Property='Description' FormatID='{32853F0F-3444-11D1-9E93-0060B03C1CA6}' PropertyID='29'>DESCRIPTION</Property></StyleOverride><Br/>"
+'add to the view label
+oView.Label.FormattedText = oPartNumber   
+
+Else
+	MessageBox.Show("The selected object is not a drawing view", "iLogic")
+End If

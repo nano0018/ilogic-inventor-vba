@@ -1,0 +1,42 @@
+﻿Dim oAsm As AssemblyDocument = ThisDoc.Document
+Dim oDef As AssemblyComponentDefinition = oAsm.ComponentDefinition
+Dim oBOM As BOM = oDef.BOM
+
+booleanParam = InputRadioBox("BOM View mode", "Structured", "Parts Only", booleanParam, Title := "BOM View mode")
+
+	If booleanParam Then
+		MessageBox.Show("Selected Structured", "BOM View mode selected")
+		oBOM.StructuredViewEnabled = True
+		oBOM.PartsOnlyViewEnabled = False
+	Else
+		MessageBox.Show("Selected Parts Only", "BOM View mode selected")
+		oBOM.StructuredViewEnabled = False
+		oBOM.PartsOnlyViewEnabled = True
+	End If
+
+Dim oBOMView As BOMView = oBOM.BOMViews(2) 'Structured View
+For Each oRow As BOMRow In oBOMView.BOMRows
+	For Each rDef As ComponentDefinition In oRow.ComponentDefinitions
+		If TypeOf (rDef) Is VirtualComponentDefinition Then Continue For
+		Try
+			rDef.Document.PropertySets("Inventor User Defined Properties")("ItemNumber").Value = oRow.ItemNumber.ToString()
+			'rDef.Document.PropertySets("Inventor User Defined Properties")("ItemQuantity").Value = oRow.ItemQuantity.ToString()
+		Catch
+			rDef.Document.PropertySets("Inventor User Defined Properties").Add(oRow.ItemNumber.ToString, "ItemNumber")
+			'rDef.Document.PropertySets("Inventor User Defined Properties").Add(oRow.ItemQuantity.ToString, "ItemQuantity")
+		End Try
+			
+	Next
+	For Each rDef As ComponentDefinition In oRow.ComponentDefinitions
+		If TypeOf (rDef) Is VirtualComponentDefinition Then Continue For
+		
+		Try
+			'rDef.Document.PropertySets("Inventor User Defined Properties")("ItemNumber").Value = oRow.ItemNumber.ToString()
+			rDef.Document.PropertySets("Inventor User Defined Properties")("ItemQuantity").Value = oRow.ItemQuantity.ToString()
+		Catch
+			'rDef.Document.PropertySets("Inventor User Defined Properties").Add(oRow.ItemNumber.ToString, "ItemNumber")
+			rDef.Document.PropertySets("Inventor User Defined Properties").Add(oRow.ItemQuantity.ToString, "ItemQuantity")
+		End Try
+			
+	Next
+Next
